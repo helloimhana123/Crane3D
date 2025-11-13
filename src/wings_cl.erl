@@ -13,7 +13,7 @@
 
 -module(wings_cl).
 -include_lib("cl/include/cl.hrl").
--include_lib("wings/e3d/e3d_image.hrl").
+-include_lib("e3d/e3d_image.hrl").
 
 -export([is_available/1, setup/0, stop/1, working/0,
          compile/2, compile/3,

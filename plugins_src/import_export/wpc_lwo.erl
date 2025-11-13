@@ -15,9 +15,9 @@
 -module(wpc_lwo).
 -export([init/0, menu/2, command/2]).
 
--include_lib("wings/e3d/e3d.hrl").
--include_lib("wings/e3d/e3d_image.hrl").
--include_lib("wings/intl_tools/wings_intl.hrl").
+-include_lib("e3d/e3d.hrl").
+-include_lib("e3d/e3d_image.hrl").
+-include_lib("intl_tools/wings_intl.hrl").
 
 init() ->
     true.

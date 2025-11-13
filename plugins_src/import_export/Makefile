@@ -20,7 +20,7 @@ ESRC=.
 WINGS_INTL=../../intl_tools
 EBIN=../../plugins/import_export
 WINGS_E3D=../../e3d
-WINGS_TOP=../../..
+WINGS_TOP=../../
 
 ifeq ($(TYPE),debug)
 TYPE_FLAGS=-DDEBUG

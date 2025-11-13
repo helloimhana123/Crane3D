@@ -15,10 +15,10 @@
 -export([init/0,menu/2,command/2]).
 
 -define(NEED_OPENGL,1).
--include_lib("wings/src/wings.hrl").
+-include_lib("src/wings.hrl").
 
--include_lib("wings/e3d/e3d.hrl").
--include_lib("wings/e3d/e3d_image.hrl").
+-include_lib("e3d/e3d.hrl").
+-include_lib("e3d/e3d_image.hrl").
 
 -import(lists, [reverse/1]).
 

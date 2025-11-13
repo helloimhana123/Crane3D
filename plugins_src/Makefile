@@ -19,7 +19,7 @@ include ../erl.mk
 ESRC=.
 WINGS_INTL=../intl_tools
 EBIN=../plugins/default
-WINGS_TOP=../..
+WINGS_TOP=../
 
 ifeq ($(TYPE),debug)
 TYPE_FLAGS=-DDEBUG

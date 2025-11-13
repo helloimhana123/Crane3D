@@ -11,7 +11,7 @@
 
 -module(wpc_flow_connect).
 -export([init/0,menu/2,command/2]).
--include_lib("wings/src/wings.hrl").
+-include_lib("src/wings.hrl").
 
 -define(ANGLE, 90.0).
 

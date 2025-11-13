@@ -20,7 +20,7 @@
 %% In some contexts these file extensions can also be .sgi files:
 %% .bw  .rgb  .rgba
 
--include_lib("wings/e3d/e3d_image.hrl").
+-include_lib("e3d/e3d_image.hrl").
 -define(INT, big-integer-unsigned).
 
 -define(LINT, little-integer-unsigned).

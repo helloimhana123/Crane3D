@@ -12,7 +12,7 @@
 
 -module(wpc_rotate_unconstrained).
 -export([init/0, menu/2, command/2]).
--include_lib("wings/src/wings.hrl").
+-include_lib("src/wings.hrl").
 -import(lists, [foldl/3]).
 
 init() ->

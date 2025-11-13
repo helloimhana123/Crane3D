@@ -14,7 +14,7 @@
 -module(wings_bool).
 -export([add/1,isect/1,sub/1]).
 -include("wings.hrl").
--include_lib("wings/e3d/e3d.hrl").
+-include_lib("e3d/e3d.hrl").
 
 -define(EPS, 1.0e-4).  %% 1.0e-4
 -define(EPS2, (?EPS*?EPS)).  %% used without SQRT() => 1.0e-4

@@ -20,9 +20,9 @@
 
 -define(WPCWRL, wpc_wrl).
 
--include_lib("wings/e3d/e3d.hrl").
--include_lib("wings/e3d/e3d_image.hrl").
--include_lib("wings/intl_tools/wings_intl.hrl").
+-include_lib("e3d/e3d.hrl").
+-include_lib("e3d/e3d_image.hrl").
+-include_lib("intl_tools/wings_intl.hrl").
 
 -record(materialprops, {
     ambient_intensity :: float(),

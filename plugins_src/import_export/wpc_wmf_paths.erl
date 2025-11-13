@@ -21,9 +21,9 @@
 
 -import(lists, [map/2,foldl/3,keydelete/3,keyreplace/4,sort/1]).
 
--include_lib("wings/e3d/e3d.hrl").
--include_lib("wings/e3d/e3d_image.hrl").
--include_lib("wings/intl_tools/wings_intl.hrl").
+-include_lib("e3d/e3d.hrl").
+-include_lib("e3d/e3d_image.hrl").
+-include_lib("intl_tools/wings_intl.hrl").
 
 -ifdef(DEBUG_1).
 -define(DEBUG_FMT(A,B), io:format(A,B)).

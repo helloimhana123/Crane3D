@@ -20,8 +20,8 @@
 -import(lists, [reverse/1,splitwith/2,member/2,
 		sublist/2,nthtail/2,map/2]).
 
--include_lib("wings/e3d/e3d.hrl").
--include_lib("wings/intl_tools/wings_intl.hrl").
+-include_lib("e3d/e3d.hrl").
+-include_lib("intl_tools/wings_intl.hrl").
 
 -define(SCALEFAC, 0.01).		% amount to scale AI coords by
 

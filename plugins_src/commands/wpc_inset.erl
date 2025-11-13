@@ -15,7 +15,7 @@
 
 -export([collect_inset_face_data/2]).  %% For wpc_greebles
 
--include_lib("wings/src/wings.hrl").
+-include_lib("src/wings.hrl").
 
 init() ->
     true.

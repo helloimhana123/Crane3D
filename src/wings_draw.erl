@@ -25,7 +25,7 @@
 -define(NEED_OPENGL, 1).
 -define(NEED_ESDL, 1).
 -include("wings.hrl").
--include_lib("wings/e3d/e3d.hrl").
+-include_lib("e3d/e3d.hrl").
 
 -import(lists, [foreach/2,reverse/1,reverse/2,member/2,
 		foldl/3,sort/1,keysort/2]).

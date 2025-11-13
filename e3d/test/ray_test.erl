@@ -9,7 +9,7 @@
 -module(ray_test).
 
 -compile(export_all).
--include_lib("wings/e3d/e3d.hrl").
+-include_lib("e3d/e3d.hrl").
 -include_lib("cl/include/cl.hrl").
 
 -define(F32, 32/float-native).

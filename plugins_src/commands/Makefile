@@ -18,7 +18,7 @@ include ../../erl.mk
 ESRC=.
 WINGS_INTL=../../intl_tools
 EBIN=../../plugins/commands
-WINGS_TOP=../../..
+WINGS_TOP=../../
 WINGS_E3D=../../e3d
 
 ifeq ($(TYPE),debug)

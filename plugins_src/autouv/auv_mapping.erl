@@ -49,9 +49,9 @@
          loop_to_circle/1
         ]).
 
--include_lib("wings/src/wings.hrl").
+-include_lib("src/wings.hrl").
 -include("auv.hrl").
--include_lib("wings/e3d/e3d.hrl").
+-include_lib("e3d/e3d.hrl").
 
 -import(lists, [foldl/3,reverse/1]).
 
