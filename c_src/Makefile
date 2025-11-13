@@ -19,12 +19,14 @@ LIBDIR = ../priv
 ifeq ($(findstring CYGWIN,$(OS)),CYGWIN)
   USEMINGWGCC := true
   DEF_CC = mingw32-gcc
+  CXX=g++
 endif
 
 ifdef MSYSTEM
  ifeq ($(MSYSTEM),$(filter $(MSYSTEM),MINGW32 MINGW64))
   USEMINGWGCC := true
   DEF_CC = gcc
+  CXX=g++
  endif
 else
  ifeq ($(WSLcross), true)
@@ -63,11 +65,11 @@ else
  OUT_OBJ = -o
  OBJ = o
  CFLAGS += $(COMMON_CFLAGS) -O3 -fPIC
- CXXFLAGS += -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-switch
+ CXXFLAGS += -std=c++17 -O2 -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-switch
 
  ifdef USEMINGWGCC
   SO_EXT = dll
-  LIBS = -mdll
+  LIBS = -shared -static-libstdc++ -static-libgcc #-mdll
  else
   SO_EXT = so
   DEF_CC = $(CC)
@@ -110,7 +112,10 @@ opt debug: $(TARGET_FILES)
 
 $(LIBDIR)/libigl.$(SO_EXT): libigl.cpp
 	install -d $(LIBDIR)
-	$(GCC) $(CXXFLAGS) $(IGL_OPTS) -I$(ERL_INC) $(IGL_INCLUDE) $(DEBUG) $(OUT)$@ $< $(LIBS) $(CXX_LD)
+	$(CXX) $(CXXFLAGS) $(IGL_OPTS) -I$(ERL_INC) $(IGL_INCLUDE) -c libigl.cpp -o libigl.o
+	$(CXX) -shared $(OUT) ../priv/libigl.dll libigl.o -static-libstdc++ -static-libgcc
+
+#$(GCC) $(CXXFLAGS) $(IGL_OPTS) -I$(ERL_INC) $(IGL_INCLUDE) $(DEBUG) $(OUT)$@ $< $(LIBS) $(CXX_LD)
 
 $(LIBDIR)/wings_tess.$(SO_EXT): $(TESS_OBJ_FILES) wings_tess.c
 	install -d $(LIBDIR)
