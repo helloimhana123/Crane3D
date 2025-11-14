@@ -21,7 +21,7 @@ Var STARTMENU_FOLDER
 Var MYTEMP
 
 ; General
-OutFile "../wings-${WINGS_VERSION}.exe"
+OutFile "../crane3d-${WINGS_VERSION}.exe"
 
 ; Folder selection page
 InstallDir "$PROGRAMFILES\wings3d_${WINGS_VERSION}"
@@ -170,14 +170,14 @@ SectionIn 1 2 3 RO
 		"NoRepair" 1
 
 done:
-        CreateShortCut "$INSTDIR\plugins.lnk" "$INSTDIR\lib\wings-${WINGS_VERSION}\plugins"
+        CreateShortCut "$INSTDIR\plugins.lnk" "$INSTDIR\lib\crane3d-${WINGS_VERSION}\plugins"
 
   	; Delete beam files in $INSTDIR (should not be any).
   	Delete "$INSTDIR\*.beam"
 
   	; Delete any installed patches. Create empty patches directory.
-  	Delete "$INSTDIR\lib\wings-${WINGS_VERSION}\patches\*.*"
-        CreateDirectory "$INSTDIR\lib\wings-${WINGS_VERSION}\patches"
+  	Delete "$INSTDIR\lib\crane3d-${WINGS_VERSION}\patches\*.*"
+        CreateDirectory "$INSTDIR\lib\crane3d-${WINGS_VERSION}\patches"
 SectionEnd ; SecWingsBase
 
 Section "Make Default" SecWingsMakeDefault

@@ -40,7 +40,7 @@ load() ->
             set_value(legacy_colors_checked, true),
             ok;
         PrefFile ->
-            io:format("wings-~s\nReading preferences from: ~ts\n",
+            io:format("Crane3D V~s\n\nReading preferences from: ~ts\n",
                       [wings_u:version(), PrefFile]),
             case local_consult(PrefFile) of
                 {ok,List0} ->
@@ -211,13 +211,13 @@ pref_dirs() ->
 
 unix_pref() ->
     Home = os:getenv("HOME"),
-    [{filename:join([Home, ".wings3d"]), "preferences.txt"},
-     {Home, ".wings"}].
+    [{filename:join([Home, ".crane3d"]), "preferences.txt"},
+     {Home, ".crane3"}].
 
 mac_pref() ->
     Home = os:getenv("HOME"),
-    [{filename:join([Home,"Library","Preferences","Wings3D"]), "Preferences.txt"},
-     {filename:join([Home,"Library","Preferences"]), "Wings 3D Preferences.txt"} |
+    [{filename:join([Home,"Library","Preferences","Crane3D"]), "Preferences.txt"},
+     {filename:join([Home,"Library","Preferences"]), "Crane3D Preferences.txt"} |
      unix_pref()].
 
 win32_pref() ->
@@ -239,7 +239,7 @@ win32_pref_1(R, [FolderType|T]) ->
     case wings_u:win32_special_folder(R, FolderType) of
 	none -> win32_pref_1(R, T);
 	Path ->
-            [{filename:join([Path,"Wings3D"]),"Preferences.txt"}|
+            [{filename:join([Path,"Crane3D"]),"Preferences.txt"}|
              win32_pref_1(R, T)]
     end;
 win32_pref_1(_, []) -> [].

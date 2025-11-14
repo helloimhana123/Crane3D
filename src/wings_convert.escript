@@ -405,7 +405,7 @@ strip_path(Path)            -> lists:reverse(Path).
 
 installed(Path) ->
     Lib = filename:join(Path, "lib"),
-    case filelib:wildcard("wings-*", Lib) of
+    case filelib:wildcard("crane3d-*", Lib) of
         [WingsDir] ->
             filename:join(Lib, WingsDir);
         [] ->

@@ -83,7 +83,7 @@ dialyze: opt intl_tools
 
 -include vsn.mk
 
-WINGS_TARNAME=wings-$(WINGS_VSN)
+WINGS_TARNAME=crane3d-$(WINGS_VSN)
 .PHONY: dist
 dist:
 	git archive --format=tar \

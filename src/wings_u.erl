@@ -152,7 +152,7 @@ caption(#st{file=Name}=St) ->
     St.
 
 basedir(Type) ->
-    filename:basedir(Type, "Wings3D").
+    filename:basedir(Type, "Crane3D").
 
 -spec is_exported(module(), atom(), integer()) -> boolean().
 is_exported(M,F,A) ->
@@ -205,8 +205,8 @@ get_rel_path_0([_|T], Acc) ->
 
 wings() ->
     case wings_branch() of
-	"" -> debug("Wings3D");
-	_ -> "Wings3D " ++ ?wings_version ++ " (" ++ ?wings_branch ++ ")"
+	"" -> debug("Crane3D");
+	_ -> "Crane3D " ++ ?wings_version ++ " (" ++ ?wings_branch ++ ")"
     end.
 
 wings_branch() ->
