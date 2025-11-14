@@ -1,0 +1,14 @@
+
+Default keyboard bindings:
+
+    src/wings_hotkey.erl line 567
+
+Executing a command:
+
+    src/wings.erl line 668
+
+    Line 765 has list of commands!
+
+Menus:
+
+    src/wings.erl line 975
