@@ -36,7 +36,7 @@
 -record(state, {st, func}).
 
 init() ->
-    wings_pref:set_default(camera_mode, wings_cam),
+    wings_pref:set_default(camera_mode, maya),
     wings_pref:set_default(num_buttons, 3),
     wings_pref:set_default(cam_rotation_speed, 25),
     wings_pref:set_default(pan_speed, 25),
