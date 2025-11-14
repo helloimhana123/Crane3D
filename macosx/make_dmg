@@ -12,7 +12,7 @@
 #     $Id$
 #
 
-temp_dmg="wings-macosx.$$.dmg"
+temp_dmg="crane3d-macosx.$$.dmg"
 dmg="$1"
 src="$2"
 dst="$3"
