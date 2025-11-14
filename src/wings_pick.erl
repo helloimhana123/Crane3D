@@ -481,8 +481,13 @@ marquee_event(#mousebutton{x=X0,y=Y0,mod=Mod,button=1,state=?SDL_RELEASED}, M) -
     W = abs(Ox-X)*2.0,
     H = abs(Oy-Y)*2.0,
     case marquee_pick(Inside, X, Y, W, H, St0) of
-	{none,_} -> ok;
-	{Hits,_} ->
+	{none,_} -> % No dragging
+        St = St0#st{sel=[]},
+        wings_wm:later({new_state,St});
+	{[],_} -> % Dragging, but nothing inside.
+        St = St0#st{sel=[]},
+        wings_wm:later({new_state,St});
+	{Hits,_} -> % Dragging, with hits found (items inside the box select).
 	    St = marquee_update_sel(Op, Hits, St0),
 	    wings_wm:later({new_state,St})
     end,
