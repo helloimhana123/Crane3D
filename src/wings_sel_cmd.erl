@@ -228,6 +228,8 @@ command({edge_loop,complete_loops}, St) ->
     {save_state,complete_loops(St)};
 command(deselect, St) ->
     {save_state,deselect(St)};
+command(reset, St) ->
+    {save_state,reset(St)};
 command(more, St) ->
     {save_state,wings_sel_conv:more(St)};
 command(less, St) ->
@@ -434,15 +436,28 @@ inverse(#st{selmode=Mode}=St) ->
 	      end
       end, St).
 
+
+%%%
+%%% Reset
+%%%
+
+reset(St) ->
+    wings_sel:reset(St).
+%     case wings_pref:get_value(conditional_deselect) of
+%       true -> wings_sel:conditional_reset(St);
+%       false -> wings_sel:reset(St)
+%     end.
+
 %%%
 %%% Deselect
 %%%
 
 deselect(St) ->
-    case wings_pref:get_value(conditional_deselect) of
-      true -> wings_sel:conditional_reset(St);
-      false -> wings_sel:reset(St)
-    end.
+    wings_sel:deselect(St).
+%     case wings_pref:get_value(conditional_deselect) of
+%       true -> wings_sel:conditional_reset(St);
+%       false -> wings_sel:reset(St)
+%     end.
 
 %%%
 %%% Hide Selected

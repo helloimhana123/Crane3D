@@ -284,8 +284,15 @@ bind_virtual(Key, Mods, Cmd, Source) ->
     ets:insert(?KL, {Bkey,Cmd,Source}),
     Bkey.
 
+% For some reason these keys also have a unicode code.
+% So we make sure to deal with them correctly.
 bindkey(#keyboard{sym=?SDLK_TAB=C,mod=Mod}, Cmd) ->
     bkey({C,sort(modifiers(Mod))}, Cmd);
+bindkey(#keyboard{sym=?SDLK_ESCAPE=C,mod=Mod}, Cmd) ->
+    bkey({C,sort(modifiers(Mod))}, Cmd);
+bindkey(#keyboard{sym=?SDLK_BACKSPACE=C,mod=Mod}, Cmd) ->
+    bkey({C,sort(modifiers(Mod))}, Cmd);
+
 bindkey(#keyboard{sym=Sym,mod=Mod,unicode=C}, Cmd) ->
     case modifiers(Mod) of
 	[] when C =/= 0 ->
@@ -594,6 +601,7 @@ default_keybindings() ->
      {{$9, [ctrl, alt]},     {hotkey, unbind}}, %% Swedish keyboards
      {{$9, [ctrl]},          {hotkey, unbind}},
 
+     {{?SDLK_ESCAPE,[]}, {select, reset}},
      {$1, {select, body}},
      {$2, {select, vertex}},
      {$3, {select, edge}},

@@ -13,7 +13,7 @@
 
 -module(wings_sel).
 
--export([clear/1,reset/1,set/2,set/3,
+-export([clear/1,reset/1,deselect/1,set/2,set/3,
 	 conditional_reset/1,
          selected_ids/1,unselected_ids/1,
 	 map/2,map_obj/2,
@@ -60,10 +60,13 @@ clear(St) ->
 
 -spec reset(#st{}) -> #st{}.
 
-reset(#st{selmode=Mode}=St) ->
-    case Mode of
-	_ -> St#st{sel=[]}
-    end.
+reset(#st{}=St) ->
+    St#st{selmode=body, sel=[], sh=false}.
+
+-spec deselect(#st{}) -> #st{}.
+
+deselect(#st{}=St) ->
+    St#st{sel=[], sh=false}.
 
 -spec conditional_reset(#st{}) -> #st{}.
 
