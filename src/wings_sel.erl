@@ -62,8 +62,7 @@ clear(St) ->
 
 reset(#st{selmode=Mode}=St) ->
     case Mode of
-	body -> St#st{selmode=face,sel=[],sh=true};
-	_ -> St#st{sel=[],sh=true}
+	_ -> St#st{sel=[]}
     end.
 
 -spec conditional_reset(#st{}) -> #st{}.

@@ -594,12 +594,12 @@ default_keybindings() ->
      {{$9, [ctrl, alt]},     {hotkey, unbind}}, %% Swedish keyboards
      {{$9, [ctrl]},          {hotkey, unbind}},
 
-     {$\s,              {select,deselect}},
+     {{$d,[ctrl]},      {select,deselect}},
      {$a,               {view,highlight_aim}},
      {$A,               {view,frame}},
      {$b,               {select,body}},
-     {{$d,[ctrl]},      {edit,repeat}},
-     {$d,               {edit,repeat_args}},
+%      {{$d,[ctrl]},      {edit,repeat}},
+%      {$d,               {edit,repeat_args}},
      {$D,               {edit,repeat_drag}},
      {$e,               {select,edge}},
 
