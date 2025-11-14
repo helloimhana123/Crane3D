@@ -594,6 +594,11 @@ default_keybindings() ->
      {{$9, [ctrl, alt]},     {hotkey, unbind}}, %% Swedish keyboards
      {{$9, [ctrl]},          {hotkey, unbind}},
 
+     {$1, {select, body}},
+     {$2, {select, vertex}},
+     {$3, {select, edge}},
+     {$4, {select, face}},
+
      {{$d,[ctrl]},      {select,deselect}},
      {$a,               {view,highlight_aim}},
      {$A,               {view,frame}},
@@ -628,15 +633,15 @@ default_keybindings() ->
      {$-,               {select,less}},
 
      %% Mode-specific bindings.
-     {edge,$2,		{edge,{cut,2}}},
-     {edge,$3,		{edge,{cut,3}}},
-     {edge,$4,		{edge,{cut,4}}},
-     {edge,$5,		{edge,{cut,5}}},
-     {edge,$6,		{edge,{cut,6}}},
-     {edge,$7,		{edge,{cut,7}}},
-     {edge,$8,		{edge,{cut,8}}},
-     {edge,$9,		{edge,{cut,9}}},
-     {edge,$0,		{edge,{cut,10}}},
+%      {edge,$2,		{edge,{cut,2}}},
+%      {edge,$3,		{edge,{cut,3}}},
+%      {edge,$4,		{edge,{cut,4}}},
+%      {edge,$5,		{edge,{cut,5}}},
+%      {edge,$6,		{edge,{cut,6}}},
+%      {edge,$7,		{edge,{cut,7}}},
+%      {edge,$8,		{edge,{cut,8}}},
+%      {edge,$9,		{edge,{cut,9}}},
+%      {edge,$0,		{edge,{cut,10}}},
 
      {vertex,$c,	{vertex,connect}},
      {edge,$c,		{edge,connect}},
