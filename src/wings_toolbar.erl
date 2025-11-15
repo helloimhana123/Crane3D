@@ -13,12 +13,27 @@
 
 -module(wings_toolbar).
 
--export([init/2, update/2]).
+-export([init/3, update/2]).
 
 -include("wings.hrl").
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Toolbar
+
+% If tool is usable (clickable) or not.
+enable_tool(_, _, _) ->
+% enable_tool(Toolbar, Id, State) ->
+    ok.
+
+% If the state is on/off.
+toggle_tool(Toolbar, Id, State) ->
+    Btn = wxWindow:findWindowById(Id, [{parent, Toolbar}]),
+    wxButton:setBackgroundColour(Btn,
+        case State of
+            true -> {0, 255, 0};
+            false -> {0, 0, 0}
+        end
+    ).
 
 update({active, Win, Restr}, #{active:=Win, restr:=Restr}=St) ->
     St;
@@ -50,7 +65,7 @@ update({view, Key0, State}, #{me:=TB}=St) ->
 		   end,
     case wings_menu:predefined_item(toolbar, Key) of
 	false -> ignore;
-	Id -> wxToolBar:toggleTool(TB, Id, Value)
+	Id -> toggle_tool(TB, Id, Value)
     end,
     St.
 
@@ -60,10 +75,10 @@ update_selection(TB, Mode, Sh, Restr) ->
     States = [{Butt, wings_menu:predefined_item(toolbar, Butt),
 	       Butt =:= Mode orelse button_sh_filter(Butt, Sh)}
 	      || Butt <- All],
-    [wxToolBar:toggleTool(TB, Id, State) || {_, Id, State} <- States],
-    [wxToolBar:enableTool(TB, Id, lists:member(Butt, Enabled)) || {Butt, Id, _} <- States],
+    [toggle_tool(TB, Id, State) || {_, Id, State} <- States],
+    [enable_tool(TB, Id, lists:member(Butt, Enabled)) || {Butt, Id, _} <- States],
     case Restr of
-	[One] -> [wxToolBar:enableTool(TB, Id, false) || {Butt, Id, _} <- States, Butt =:= One];
+	[One] -> [enable_tool(TB, Id, false) || {Butt, Id, _} <- States, Butt =:= One];
 	_ -> ignore
     end.
 
@@ -77,21 +92,26 @@ button_sh_filter(face, true) -> true;
 button_sh_filter(body, true) -> true;
 button_sh_filter(_, _) -> false.
 
-init(Frame, Icons) ->
+init(Frame, FrameSizer, Icons) ->
     wxSystemOptions:setOption("msw.remap", 2),
-    TB = wxFrame:createToolBar(Frame),
+
+    TB = wxPanel:new(Frame),
+    HSizer = wxBoxSizer:new(?wxHORIZONTAL),
+    wxSizer:add(FrameSizer, TB, [{proportion, 0},
+             {flag, ?wxEXPAND},
+             {border, 0}]),
+
+    wxPanel:setBackgroundColour(TB, {255, 0, 0}),
+
     Bs = [make_bitmap(B, Icons) || B <- buttons()],
     Tools = case wings_pref:get_value(extended_toolbar) of
 		true -> Bs;
 		false -> standard(Bs)
 	    end,
-    [add_tools(Tool, TB) || Tool <- Tools],
-    %% wxToolBar:connect(TB, left_down, [{skip, true}]),
-    %% wxToolBar:connect(TB, left_up, [{skip, true}]),
-    %% wxToolBar:connect(TB, comand_tool_rclicked, [{skip, true}]),
-    %% wxToolBar:connect(TB, comand_tool_enter, [{skip, true}]),
-    wxToolBar:realize(TB),
-    wxToolBar:show(TB, [{show, wings_pref:get_value(show_toolbar)}]),
+    [add_tools(Tool, TB, HSizer) || Tool <- Tools],
+
+    wxPanel:setSizer(TB, HSizer),
+
     State = #{me=>TB, mode=>body, sh=>false, restr=>none, bs=>Bs, active=>geom, wins=>#{}},
     update({selmode, geom, body, false}, State).
 
@@ -121,7 +141,6 @@ make_button(Name, Type, Art) ->
     Id = wings_menu:predefined_item(toolbar, Name),
     true = is_integer(Id),
     #{name=>Name, id=>Id, art=>Art, type=>Type}.
-
 
 standard(Bs) ->
     Standard = [workmode,orthogonal_view,separator,
@@ -157,26 +176,38 @@ make_bitmap(#{art:=Art}=B, Images) ->
     end;
 make_bitmap(separator, _Images) -> separator.
 
-add_tools(separator, TB) ->
-    wxToolBar:addStretchableSpace(TB);
-add_tools(#{id:=Id, bm:=BM, type:=Type, name:=Tool}, TB) ->
-    Kind = button_kind(Type),
+add_tools(separator, _, HSizer) ->
+    wxSizer:addStretchSpacer(HSizer);
+
+add_tools(#{id:=Id, bm:=BM, type:=Type, name:=Tool}, Toolbar, HSizer) ->
+%     Kind = button_kind(Type),
     Help = button_help(Tool),
-    Opts = [{kind, Kind}, {shortHelp, Help}, {longHelp, Help}],
-    wxToolBar:addTool(TB, Id, "", BM, ?wxNullBitmap, Opts),
-    wxToolBar:enableTool(TB, Id, true),
+    Btn = wxBitmapButton:new(Toolbar, Id, BM),
+    wxWindow:setToolTip(Btn, Help),
+    wxEvtHandler:connect(Btn, command_button_clicked, [{callback, fun handle_button_click/2}, {userData, #{id => Id}}]),
+
+    wxSizer:add(HSizer, Btn,  [
+        {proportion, 0},
+        {flag, ?wxALL bor ?wxALIGN_CENTER_VERTICAL},
+        {border, 4}
+    ]),
+
+    enable_tool(Toolbar, Id, true),
     case Type of
-	toggle when Tool =:= workmode ->
-	    wxToolBar:toggleTool(TB, Id, not wings_pref:get_value(Tool, false));
-	toggle ->
-	    wxToolBar:toggleTool(TB, Id, wings_pref:get_value(Tool, false));
-	_ ->
-	    ignore
+        toggle when Tool =:= workmode ->
+            toggle_tool(Toolbar, Id, not wings_pref:get_value(Tool, false));
+        toggle ->
+            toggle_tool(Toolbar, Id, wings_pref:get_value(Tool, false));
+        _ ->
+            ignore
     end,
     ok.
 
-button_kind(toggle) -> ?wxITEM_CHECK;
-button_kind(normal) -> ?wxITEM_NORMAL.
+handle_button_click(#wx{obj=_, userData=#{id:=Id}}, _) ->
+    wings ! {action, wings_menu:id_to_name(Id)}.
+
+% button_kind(toggle) -> ?wxITEM_CHECK;
+% button_kind(normal) -> ?wxITEM_NORMAL.
 
 button_help(Tool) ->
     button_help_2(icon_name(Tool), undecided).

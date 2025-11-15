@@ -313,7 +313,7 @@ init(_Opts) ->
 	wings_pref:set_default(window_size, {780,570}),
 	TopSize = wings_pref:get_value(window_size),
 	Frame0 = wxFrame:new(wx:null(), -1, "Wings 3D", [{size, TopSize}]),
-        Frame = wx_object:set_pid(Frame0, self()),
+    Frame = wx_object:set_pid(Frame0, self()),
 
 	IconImgs = make_icons(),
 	set_icon(Frame),
@@ -321,10 +321,10 @@ init(_Opts) ->
 
 	Top = make(Frame),
 	Canvas = make_splash(wxPanel:new(win(Top)), IconImgs),
+	Toolbar = wings_toolbar:init(Frame, Sizer, IconImgs),
 	wxSizer:add(Sizer, win(Top), [{proportion, 1}, {border, 0},
                                       {flag, ?wxEXPAND bor ?wxLEFT bor ?wxRIGHT}]),
 	wxSplitterWindow:initialize(win(Top), Canvas),
-	Toolbar = wings_toolbar:init(Frame, IconImgs),
 	wxSizer:setSizeHints(Sizer, win(Top)),
 	wxFrame:setSizer(Frame, Sizer),
 
