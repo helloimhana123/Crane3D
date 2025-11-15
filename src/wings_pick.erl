@@ -59,10 +59,13 @@ event(#mousemotion{}=Mm, #st{selmode=Mode}=St, Redraw) ->
 	true -> {seq,push,handle_hilite_event(Mm, #hl{st=St,redraw=Redraw})}
     end;
 event(#mousebutton{button=1,x=X,y=Y,mod=Mod,state=?SDL_PRESSED}, St, _)
-        when Mod band (?SHIFT_BITS bor ?CTRL_BITS) =/= 0 ->
-    setup_marquee(X, Y, St);
+        when Mod band (?SHIFT_BITS bor ?CTRL_BITS bor ?ALT_BITS) =/= 0 ->
+    CtrlPressed=Mod band ?CTRL_BITS =/= 0,
+%     ShiftPressed=Mod band ?SHIFT_BITS =/= 0,
+%     AltPressed=Mod band ?ALT_BITS =/= 0,
+    paint_pick(X, Y, St, CtrlPressed);
 event(#mousebutton{button=1,x=X,y=Y,state=?SDL_PRESSED}, St, _) ->
-    paint_pick(X, Y, St);
+    paint_pick(X, Y, St, false);
 event(_, _, _) -> next.
 
 hilite_event(Mm, St, Redraw) ->
@@ -81,11 +84,14 @@ hilite_event(_, _, _,_) -> next.
 hilite_enabled(body) -> wings_pref:get_value(body_hilite);
 hilite_enabled(_) -> true.
 
-paint_pick(X, Y, St0) ->
-    case do_pick(X, Y, St0) of
+paint_pick(X, Y, St0) -> paint_pick(X, Y, St0, false).
+
+paint_pick(X, Y, St0, CtrlPressed) ->
+    case do_pick(X, Y, St0, CtrlPressed) of
 	none ->
 	    setup_marquee(X, Y, St0);
 	{PickOp,_,St} ->
+        %St = St0#st{sel=[]},
 	    wings_wm:grab_focus(),
 	    wings_wm:dirty(),
 	    wings_draw:refresh_dlists(St),
@@ -463,34 +469,40 @@ marquee_event(#mousemotion{x=X0,y=Y0}, #marquee{o={OX,OY}, overlay=OL}) ->
     wings_frame:overlay_draw(OL, {MinX,MinY,W,H}, 170),
     keep;
 marquee_event(#mousebutton{x=X0,y=Y0,mod=Mod,button=1,state=?SDL_RELEASED}, M) ->
-    {Inside,Op} =
-	if
-	    Mod band ?SHIFT_BITS =/= 0, Mod band ?CTRL_BITS =/= 0 ->
-		{true,delete};
-	    Mod band ?CTRL_BITS =/= 0 ->
-		{false,delete};
-	    Mod band ?SHIFT_BITS =/= 0 ->
-		{true,add};
+    {Inside,Op} = if
+% 	    Mod band ?SHIFT_BITS =/= 0, Mod band ?CTRL_BITS =/= 0 ->
+% 		{true,delete};
+% 	    Mod band ?CTRL_BITS =/= 0 ->
+% 		{false,delete};
+% 	    Mod band ?SHIFT_BITS =/= 0 ->
+% 		{true,add};
 	    true ->
 		{false,add}
 	end,
+
     #marquee{o=Orig,st=St0,overlay=OL} = M,
     {Ox,Oy} = wings_wm:screen2local(Orig),
     X = (Ox+X0)/2.0,
     Y = (Oy+Y0)/2.0,
     W = abs(Ox-X)*2.0,
     H = abs(Oy-Y)*2.0,
-    case marquee_pick(Inside, X, Y, W, H, St0) of
-	{none,_} -> % No dragging
-        St = St0#st{sel=[]},
-        wings_wm:later({new_state,St});
-	{[],_} -> % Dragging, but nothing inside.
-        St = St0#st{sel=[]},
-        wings_wm:later({new_state,St});
-	{Hits,_} -> % Dragging, with hits found (items inside the box select).
-	    St = marquee_update_sel(Op, Hits, St0),
-	    wings_wm:later({new_state,St})
+    CtrlPressed = Mod band ?CTRL_BITS =/= 0,
+
+    St1 = case CtrlPressed of
+        true -> St0;
+        false -> St0#st{sel=[]}
     end,
+
+    St2 = case marquee_pick(Inside, X, Y, W, H, St0) of
+        {none,_} -> % No dragging
+            St1;
+        {[],_} -> % Dragging, but nothing inside.
+            St1;
+        {Hits,_} -> % Dragging, with hits found (items inside the box select).
+            marquee_update_sel(Op, Hits, St1)
+    end,
+
+    wings_wm:later({new_state, St2}),
     wings_frame:overlay_hide(OL),
     wings_io:ungrab(X0,Y0),
     wings_wm:release_focus(),
@@ -648,10 +660,20 @@ pick_event(_, _) -> keep.
 %%  its faces selected or none.
 %%
 -type vm_mirror_side() :: 'original'|'mirror'.
--spec do_pick(non_neg_integer(), non_neg_integer(), #st{}) ->
-    'none' | {'add'|'delete',{non_neg_integer(),non_neg_integer(),
-			      vm_mirror_side()},#st{}}.
-do_pick(X, Y, St) ->
+-type do_pick_return() :: 'none' | {'add'|'delete',{non_neg_integer(),non_neg_integer(), vm_mirror_side()},#st{}}.
+-spec
+    do_pick(non_neg_integer(), non_neg_integer(), #st{}) -> do_pick_return(). % this works somehow, only applies to exports.
+%     (non_neg_integer(), non_neg_integer(), #st{}, CtrlPressed :: boolean()) -> do_pick_return().
+
+do_pick(X, Y, St0) ->
+    do_pick(X, Y, St0, false).
+
+do_pick(X, Y, St0, CtrlPressed) ->
+    St = case CtrlPressed of
+        true -> St0;
+        false -> St0#st{sel=[]}
+    end,
+
     case raw_pick(X, Y, St) of
 	none ->
 	    none;
