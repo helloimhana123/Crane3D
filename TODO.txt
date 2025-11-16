@@ -3,3 +3,6 @@ TODO:
 
     1. Figure out what conditional_deselect is.
     2. Investigate up/down perspective.
+    3. Don't marquee select hidden (by geo) items.
+    4. Clicking and dragging on a face/vert/edge with control down, will deselect other faces.
+       Should be fixed by selecting on mouse up, and allowing marquee select even when over an item.

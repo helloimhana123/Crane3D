@@ -12,3 +12,6 @@ Executing a command:
 Menus:
 
     src/wings.erl line 975
+
+xxWidgets handle_event:
+    src/wings_frame.erl line 365
